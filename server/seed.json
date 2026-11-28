@@ -37,7 +37,7 @@
   },
   {
     "id": 1000004,
-    "title": "A Nightstand Held Together with Rubber Bands",
+    "title": "The Nightstand That Won’t Open",
     "medium": "3D art",
     "statement": "This nightstand is made from wood, rattan cane webbing, and rubber bands that resist the pull of the drawers. I cut the nightstand in half to show what happens inside. This was the first piece in my investigation, and it got me thinking about how a familiar object can make you notice the movement you usually take for granted.",
     "pos": [
@@ -55,7 +55,7 @@
   },
   {
     "id": 1000005,
-    "title": "A Phone Call You Have to Work For",
+    "title": "Please Hold",
     "medium": "3D art",
     "statement": "I took the idea from the nightstand and applied it to answering a phone. To take the call, you lift a rock from an antique chest and solve a small puzzle box. I wanted to see how far you could stretch an everyday interaction and how the extra steps could make it feel like a game.",
     "pos": [
@@ -73,7 +73,7 @@
   },
   {
     "id": 1000006,
-    "title": "Gears Engraved with Spirograph Patterns",
+    "title": "Pretty Gears, Bad Machine",
     "medium": "3D art",
     "statement": "I designed the gears in CAD and engraved spirograph patterns into the acrylic. The patterns made some of the gears harder to turn. Like the phone piece, this let me experiment with the tradeoff between how a mechanism looks and how easily it works. You can see the patterns and the gears together in the shallow birch case.",
     "pos": [
@@ -91,9 +91,9 @@
   },
   {
     "id": 1000007,
-    "title": "Trying to Answer in Time",
+    "title": "Your Call Is Important",
     "medium": "Writing",
-    "statement": "This sample poem imagines a friend calling while someone tries to figure out the rock and puzzle box in “A Phone Call You Have to Work For.”",
+    "statement": "This sample poem imagines a friend calling while someone tries to figure out the rock and puzzle box in “Please Hold.”",
     "pos": [
       -1,
       9.0,
@@ -212,7 +212,7 @@
   },
   {
     "id": 1000014,
-    "title": "A Sculpture Made from a Keyboard",
+    "title": "A Keyboard You Can’t Type On",
     "medium": "3D art",
     "statement": "I took apart a keyboard and rearranged its pieces into a sculpture, keeping the cords and lights visible. The nightstand still invites you to try its drawers. This piece goes further by giving the parts a new job altogether. It let me look at the shapes and textures of something I usually only think of as a tool.",
     "parents": [
@@ -230,7 +230,7 @@
   },
   {
     "id": 1000015,
-    "title": "A Tower with Its Mechanism on Display",
+    "title": "The Tower Cut Open",
     "medium": "3D art",
     "statement": "I designed a working tower that could extend, then cut it open to expose the way it moved and rebuilt it as a sculpture. The fishing line stays visible against the blue structure, alongside mud and dried foliage. Like the engraved gears, it gives you a reason to look closely at parts that are usually hidden.",
     "parents": [
@@ -248,7 +248,7 @@
   },
   {
     "id": 1000016,
-    "title": "A Launcher Rebuilt as a Sculpture",
+    "title": "A Launcher That Lost Its Job",
     "medium": "3D art",
     "statement": "This started as a working launcher. I gradually removed the parts it needed to launch anything, while keeping details such as the blue wheels, wood, and steel cable. The tower opened up a mechanism so people could see it. Here I wanted to see how much of the original object you could still recognize after its purpose changed.",
     "parents": [

@@ -1,9 +1,9 @@
 [
   {
     "id": 1000001,
-    "title": "What if everyday objects made life harder?",
+    "title": "What can we learn by making an everyday object work differently?",
     "medium": "Spark",
-    "statement": "Start with something ordinary. Change one thing so it fights back when someone tries to use it.",
+    "statement": "Choose an object you use without thinking, like a drawer or a phone. Change how it works and see what you notice when you have to slow down and figure it out.",
     "pos": [
       0,
       3.8,
@@ -37,9 +37,9 @@
   },
   {
     "id": 1000004,
-    "title": "The Nightstand That Won’t Open",
+    "title": "A Nightstand Held Together with Rubber Bands",
     "medium": "3D art",
-    "statement": "A familiar piece of furniture turns stubborn. Rubber bands hold the drawers shut, and a cut through the cabinet shows what’s getting in the way.",
+    "statement": "This nightstand is made from wood, rattan cane webbing, and rubber bands that resist the pull of the drawers. I cut the nightstand in half to show what happens inside. This was the first piece in my investigation, and it got me thinking about how a familiar object can make you notice the movement you usually take for granted.",
     "pos": [
       -3.9,
       6.0,
@@ -55,9 +55,9 @@
   },
   {
     "id": 1000005,
-    "title": "Please Hold",
+    "title": "A Phone Call You Have to Work For",
     "medium": "3D art",
-    "statement": "The nightstand makes putting something away a chore. Here the same trick moves to a phone: you have to lift a rock and solve a puzzle box just to answer a call.",
+    "statement": "I took the idea from the nightstand and applied it to answering a phone. To take the call, you lift a rock from an antique chest and solve a small puzzle box. I wanted to see how far you could stretch an everyday interaction and how the extra steps could make it feel like a game.",
     "pos": [
       1.7,
       7.5,
@@ -73,9 +73,9 @@
   },
   {
     "id": 1000006,
-    "title": "Pretty Gears, Bad Machine",
+    "title": "Gears Engraved with Spirograph Patterns",
     "medium": "3D art",
-    "statement": "The phone makes you work for an answer. These engraved gears ask a related question: how much worse can a machine work before looking good stops being worth it?",
+    "statement": "I designed the gears in CAD and engraved spirograph patterns into the acrylic. The patterns made some of the gears harder to turn. Like the phone piece, this let me experiment with the tradeoff between how a mechanism looks and how easily it works. You can see the patterns and the gears together in the shallow birch case.",
     "pos": [
       5.5,
       5,
@@ -91,9 +91,9 @@
   },
   {
     "id": 1000007,
-    "title": "Your Call Is Important",
+    "title": "Trying to Answer in Time",
     "medium": "Writing",
-    "statement": "A short poem from the other end of the line in “Please Hold.”",
+    "statement": "This sample poem imagines a friend calling while someone tries to figure out the rock and puzzle box in “A Phone Call You Have to Work For.”",
     "pos": [
       -1,
       9.0,
@@ -102,7 +102,7 @@
     "parents": [
       1000005
     ],
-    "text": "The first ring finds me\nwith both hands under a rock.\n\nThe second finds a box\nthat only opens sideways.\n\nBy the third I’m laughing.\nBy the fourth you’ve hung up.\n\nI leave the rock on the floor\nin case you call again.",
+    "text": "By the time I lift the rock,\nyou’ve called twice.\n\nThe little box opens sideways.\nI figure it out\njust as the ringing stops.\n\nWhen I call you back,\nI leave the rock on the floor.\nYou ask why I’m laughing.\nI tell you to come try it.",
     "galleryCredit": "AI-generated gallery sample"
   },
   {
@@ -212,9 +212,9 @@
   },
   {
     "id": 1000014,
-    "title": "A Keyboard You Can’t Type On",
+    "title": "A Sculpture Made from a Keyboard",
     "medium": "3D art",
-    "statement": "A keyboard comes apart and goes back together as a knot of shells, cables and light. It pushes the nightstand’s trick further: there’s no right way to use it anymore.",
+    "statement": "I took apart a keyboard and rearranged its pieces into a sculpture, keeping the cords and lights visible. The nightstand still invites you to try its drawers. This piece goes further by giving the parts a new job altogether. It let me look at the shapes and textures of something I usually only think of as a tool.",
     "parents": [
       1000004
     ],
@@ -230,9 +230,9 @@
   },
   {
     "id": 1000015,
-    "title": "The Tower Cut Open",
+    "title": "A Tower with Its Mechanism on Display",
     "medium": "3D art",
-    "statement": "The gear piece puts its insides on display. This extending tower takes that idea literally: it was cut open and rebuilt to show its cables and mechanism.",
+    "statement": "I designed a working tower that could extend, then cut it open to expose the way it moved and rebuilt it as a sculpture. The fishing line stays visible against the blue structure, alongside mud and dried foliage. Like the engraved gears, it gives you a reason to look closely at parts that are usually hidden.",
     "parents": [
       1000006
     ],
@@ -248,9 +248,9 @@
   },
   {
     "id": 1000016,
-    "title": "A Launcher That Lost Its Job",
+    "title": "A Launcher Rebuilt as a Sculpture",
     "medium": "3D art",
-    "statement": "What if you start with a working mechanism and deliberately take away what makes it useful? Wood, wheels, and steel cable are still there, but the launcher no longer does its old job.",
+    "statement": "This started as a working launcher. I gradually removed the parts it needed to launch anything, while keeping details such as the blue wheels, wood, and steel cable. The tower opened up a mechanism so people could see it. Here I wanted to see how much of the original object you could still recognize after its purpose changed.",
     "parents": [
       1000006
     ],

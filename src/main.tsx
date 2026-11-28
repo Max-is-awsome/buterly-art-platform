@@ -115,7 +115,7 @@ function FlyingButterfly({logo, headline}: {
   return <i ref={butterfly} className="flutter-butterfly" aria-hidden="true"/>;
 }
 
-function App(){const[nodes,setNodes]=useState<Node[]>([]);const[user,setUser]=useState<{id:number}|null>(null);const[ready,setReady]=useState(false);const[googleReady,setGoogleReady]=useState(false);const[loadError,setLoadError]=useState('');const[publishing,setPublishing]=useState(false);const[privateReady,setPrivateReady]=useState(false);const[page,setPage]=useState('The Effect');const[selected,select]=useState<Node|null>(null);const[openedDetail,setDetail]=useState<Node|null>(null);const[filter,setFilter]=useState('All mediums');const[search,setSearch]=useState('');const[saved,setSaved]=useState<number[]>([]);const[parents,setParents]=useState<number[]>([]);const[draft,setDraft]=useState({title:'',text:'',medium:'Writing',statement:''});const[media,setMedia]=useState<{url:string,mime:string}|null>(null);const[notice,setNotice]=useState('');const[review,setReview]=useState(false);const[ancestry,setAncestry]=useState(false);const controls=useRef<any>(null);
+function App(){const[nodes,setNodes]=useState<Node[]>([]);const[user,setUser]=useState<{id:number;questionsUsed:number;questionLimit:number}|null>(null);const[ready,setReady]=useState(false);const[googleReady,setGoogleReady]=useState(false);const[loadError,setLoadError]=useState('');const[publishing,setPublishing]=useState(false);const[privateReady,setPrivateReady]=useState(false);const[page,setPage]=useState('The Effect');const[selected,select]=useState<Node|null>(null);const[openedDetail,setDetail]=useState<Node|null>(null);const[filter,setFilter]=useState('All mediums');const[search,setSearch]=useState('');const[saved,setSaved]=useState<number[]>([]);const[parents,setParents]=useState<number[]>([]);const[draft,setDraft]=useState({title:'',text:'',medium:'Writing',statement:''});const[media,setMedia]=useState<{url:string,mime:string}|null>(null);const[notice,setNotice]=useState('');const[review,setReview]=useState(false);const[ancestry,setAncestry]=useState(false);const controls=useRef<any>(null);
 const logoText = useRef<HTMLSpanElement>(null);
 const flutterWord = useRef<HTMLElement>(null);
 const [artist, setArtist] = useState<Artist>(blankArtist);
@@ -127,6 +127,36 @@ const [creditSaving, setCreditSaving] = useState(false);
 const detail = openedDetail && (nodes.find(node => node.id === openedDetail.id) ?? openedDetail);
 const draftSynced = useRef('');
 const draftWrite = useRef(Promise.resolve());
+
+const [questionOpen, setQuestionOpen] = useState(false);
+const [questionTitle, setQuestionTitle] = useState('');
+const [questionNote, setQuestionNote] = useState('');
+const [questionSaving, setQuestionSaving] = useState(false);
+const [questionError, setQuestionError] = useState('');
+const questionsLeft = user ? (user.questionLimit ?? 5) - (user.questionsUsed ?? 0) : 0;
+
+async function publishQuestion(event: React.FormEvent<HTMLFormElement>) {
+  event.preventDefault();
+  if (!user || questionsLeft <= 0 || questionSaving) return;
+  setQuestionSaving(true);
+  setQuestionError('');
+  try {
+    const {node, questionsUsed}: {node: Node; questionsUsed:number} =
+      await api('/questions', 'POST', {title:questionTitle, statement:questionNote});
+    setUser(current => current && {...current, questionsUsed});
+    setNodes(current => [...current.filter(item => item.id !== node.id), node]);
+    setQuestionTitle('');
+    setQuestionNote('');
+    setQuestionOpen(false);
+    setDetail(node);
+    message('Your question is live.');
+  } catch (error) {
+    setQuestionError((error as Error).message);
+    api('/me').then(({user: updated}) => setUser(updated)).catch(() => {});
+  } finally {
+    setQuestionSaving(false);
+  }
+}
 
 const message=(s:string)=>{setNotice(s);setTimeout(()=>setNotice(''),4000)};
 async function api(path:string,method='GET',body?:unknown){const r=await fetch('/api'+path,{method,credentials:'same-origin',headers:body?{'Content-Type':'application/json'}:undefined,body:body?JSON.stringify(body):undefined});const data=await r.json().catch(()=>null);if(!r.ok||data===null)throw Error(data?.error||(r.status===413?'Upload is too large. Try a smaller file.':'Request failed. Please try again.'));return data}
@@ -187,7 +217,20 @@ async function release(){if(publishing)return;if(!user){message('Sign in with Go
 function artwork(n:Node){return n.url?(n.mime?.startsWith('audio')?<audio controls src={n.url}/>:n.mime?.startsWith('video')?<video controls playsInline src={n.url}/>:<img src={n.url} alt={n.alt||n.title}/>):n.text?<div className="poem">{n.text}</div>:<div className={'art art'+n.id%5} style={{'--art':colors[n.medium]} as React.CSSProperties}>{n.medium==='Spark'?<span>“</span>:<><i/><i/><i/></>}<small>{n.medium==='Spark'?'A question, infinitely interpreted':'Illustrative demo artwork'}</small></div>}
 return <><header className={page==='The Effect'?'flight-header':undefined}><button className="brand" onClick={()=>setPage('The Effect')}><span ref={logoText} className="brand-text">butterfly<span>.</span></span></button><nav>{['The Effect','Sparks','Release','My Effect'].map(p=><button className={page===p?'active':''} onClick={()=>{setPage(p);setDetail(null)}} key={p}>{p==='Release'?'+ ':''}{pageLabels[p]}</button>)}</nav>{user?<button className="auth-button" onClick={async()=>{try{await api('/logout','POST',{});window.location.reload()}catch{message('Could not sign out. Try again.')}}}>Sign out</button>:<a className="auth-button" href={googleReady?"/api/auth/google":undefined} aria-disabled={!googleReady}>{googleReady?"Sign in with Google":ready?"Sign-in unavailable":"Checking sign-in…"}</a>}</header>
 {loadError&&<div className="network-status" role="alert">{loadError}</div>}{!ready&&!loadError&&<div className="network-status">Loading the shared network…</div>}{page==='The Effect'&&<main className="effect"><div className="intro"><div className="eyebrow">A NETWORK OF HUMAN CREATIVITY</div><h1>Everything begins<br/>with a <em ref={flutterWord}>flutter.</em></h1><p>One thought. Endless interpretations.<br/>Discover what happens next.</p></div><div className="search"><span>⌕</span><input aria-label="Search artwork" placeholder="Search artwork or questions…" value={search} onChange={e=>setSearch(e.target.value)}/><kbd>↵</kbd></div><div className="graph"><Canvas camera={{position:[0,0,27],fov:48}} onPointerMissed={()=>select(null)}><ambientLight intensity={1.8}/><directionalLight position={[5,8,10]} intensity={2}/>{visible.flatMap(n=>n.parents.map(id=>{const p=visible.find(x=>x.id===id);return p?<Line key={n.id+'-'+id} points={[p.pos,n.pos]} color={selected&&connected.has(n.id)&&connected.has(id)?'#ffe0ac':'#91949b'} transparent opacity={selected?(connected.has(n.id)&&connected.has(id)?1:.1):.48} lineWidth={selected&&connected.has(n.id)&&connected.has(id)?2.6:1}/>:null}))}{visible.map(n=><mesh key={n.id} position={n.pos} onClick={e=>{e.stopPropagation();select(n)}} onDoubleClick={e=>{e.stopPropagation();controls.current?.target.set(...n.pos)}}><sphereGeometry args={[n.medium==='Spark'?.16:.105,20,16]}/><meshStandardMaterial transparent opacity={selected&&!connected.has(n.id)?.18:1} color={colors[n.medium]} roughness={.45} emissive={colors[n.medium]} emissiveIntensity={selected?.id===n.id?.7:.12}/>{(n.medium==='Spark'||selected?.id===n.id)&&<Html distanceFactor={24} position={[0,-.42,0]} center style={{pointerEvents:'none'}}><div className={'node-label '+(selected?.id===n.id?'chosen':'')}>{n.title}</div></Html>}</mesh>)}<OrbitControls ref={controls} enableDamping dampingFactor={.045} minDistance={6} maxDistance={50}/></Canvas></div>{selected&&<div className="branch-status"><b>{connected.size} connected creations highlighted</b><span>Follow the bright connections through the 3D map.</span><button onClick={()=>select(null)}>Clear highlight ×</button></div>}<div className="legend">{Object.entries(colors).map(([k,c])=><button key={k} className={filter===k?'on':''} onClick={()=>setFilter(filter===k?'All mediums':k)}><b style={{background:c}}/>{mediumLabel(k)}</button>)}</div><div className="bottom"><span><b className="live"/> THE EFFECT <small> / {nodes.length} connected creations</small></span><span className="hint">Drag to rotate <i>·</i> Scroll to explore <i>·</i> Click to discover</span><button onClick={()=>{controls.current?.reset();setAncestry(false);setFilter('All mediums');setSearch('')}}>↺ Reset view</button></div>{selected&&<aside><button className="close" onClick={()=>select(null)}>×</button>{artwork(selected)}<div className="preview-body"><div className="eyebrow" style={{color:colors[selected.medium]}}>{mediumLabel(selected.medium)}</div><h2>{selected.title}</h2><p>{selected.statement}</p><button className="primary" onClick={()=>setDetail(selected)}>View {selected.medium==='Spark'?'question':'artwork'} ↗</button><p className="muted">Its inspirations and everything it inspired are highlighted on the map.</p></div></aside>}</main>}
-{page==='Sparks'&&<section className="page"><div className="eyebrow">EVERY CONNECTION STARTS SOMEWHERE</div><h1>A question.<br/><em>A world of possibilities.</em></h1><p>You don’t need an answer. Just your own way of seeing.</p><div className="cards">{nodes.filter(n=>n.medium==='Spark').map((n,i)=><button className="spark-card" key={n.id} onClick={()=>setDetail(n)}><span className="eyebrow">QUESTION 0{i+1} <b>↗</b></span><h2>{n.title}</h2><span>Explore interpretations →</span></button>)}</div></section>}
+{page==='Sparks'&&<section className="page"><div className="eyebrow">EVERY CONNECTION STARTS SOMEWHERE</div><h1>A question.<br/><em>A world of possibilities.</em></h1><p>Pick a starting question to see what people made in response, or share a question of your own.</p>
+{user ? <div className="question-tools">
+  <p>{questionsLeft} of {user.questionLimit ?? 5} lifetime questions left. You can keep making artwork inspired by others.</p>
+  {questionsLeft > 0 && <button className="primary" aria-expanded={questionOpen} onClick={() => setQuestionOpen(!questionOpen)}>Start a question</button>}
+  {questionOpen && questionsLeft > 0 && <form className="artist-editor" onSubmit={publishQuestion}>
+    <label htmlFor="question-title">Your question</label>
+    <input id="question-title" required maxLength={160} value={questionTitle} onChange={event => setQuestionTitle(event.target.value)}/>
+    <label htmlFor="question-note">Give people a place to start <small>optional</small></label>
+    <textarea id="question-note" maxLength={500} value={questionNote} onChange={event => setQuestionNote(event.target.value)}/>
+    <button type="submit" className="primary" disabled={questionSaving || !questionTitle.trim()}>{questionSaving ? 'Publishing…' : 'Publish question'}</button>
+  </form>}
+  {questionError && <p role="alert">{questionError}</p>}
+</div> : googleReady && <p><a className="sign-in" href="/api/auth/google">Sign in to start a question →</a></p>}
+<div className="cards">{nodes.filter(n=>n.medium==='Spark').map((n,i)=><button className="spark-card" key={n.id} onClick={()=>setDetail(n)}><span className="eyebrow">QUESTION 0{i+1} <b>↗</b></span><h2>{n.title}</h2><span>Explore interpretations →</span></button>)}</div></section>}
 {page==='My Effect'&&!user&&<section className="page"><h1>My <em>work.</em></h1><p>Sign in to see your creations, drafts, and privately saved artwork.</p><a className="primary sign-in" href={googleReady?"/api/auth/google":undefined} aria-disabled={!googleReady}>{googleReady?"Continue with Google →":"Google sign-in is being configured"}</a></section>}{page==='My Effect'&&user&&<section className="page"><div className="eyebrow">YOUR PRIVATE CREATIVE SPACE</div><h1>My <em>work.</em></h1><p>See where your creativity travels. Saved securely to your account.</p><div className="stats"><div><strong>{nodes.filter(n=>n.mine).length}</strong>Your artworks</div><div><strong>{saved.length}</strong>Privately saved</div><div><strong>{draft.title||draft.text?1:0}</strong>Drafts</div></div><button className="primary" onClick={()=>begin()}>Continue creating ↗</button><form className="artist-editor" onSubmit={saveProfile}>
   <h2>Artist profile</h2>
   <p>Use a pen name and tell people what you like to make. Your profile appears publicly only on artwork you choose to credit.</p>

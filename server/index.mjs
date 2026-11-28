@@ -37,7 +37,42 @@ const googleConfigured=!!(process.env.GOOGLE_CLIENT_ID&&process.env.GOOGLE_CLIEN
 app.use('/api',(req,res,next)=>{res.set('Cache-Control','no-store');if(!['GET','HEAD','OPTIONS'].includes(req.method)&&req.get('origin')!==origin)return res.status(403).json({error:'Untrusted request origin'});next()});
 const auth=(req,res,next)=>req.user?next():res.status(401).json({error:'Sign in with Google to continue'});
 app.get('/api/health',async(_req,res)=>{await pool.query('SELECT 1');res.json({ok:true})});app.get('/api/auth/google',(req,res,next)=>googleConfigured?next():res.status(503).send('Google sign-in is being configured. Public exploration remains available.'),passport.authenticate('google',{scope:['openid','email']}));app.get('/api/auth/google/callback',passport.authenticate('google',{failureRedirect:'/?signin=failed'}),(_req,res)=>res.redirect('/'));
-app.get('/api/me',(req,res)=>res.json({user:req.user?{id:Number(req.user.id)}:null,googleConfigured}));app.post('/api/logout',(req,res,next)=>req.logout(e=>{if(e)return next(e);req.session.destroy(()=>{res.clearCookie('butterfly.sid');res.json({ok:true})})}));
+const questionLimit = 5;
+app.get('/api/me', async (req, res) => {
+  if (!req.user) return res.json({user:null, googleConfigured});
+  const {rows:[account]} = await pool.query('SELECT questions_created FROM users WHERE id=$1', [req.user.id]);
+  res.json({
+    user: account ? {id:Number(req.user.id), questionsUsed:account.questions_created, questionLimit} : null,
+    googleConfigured
+  });
+});
+app.post('/api/questions', auth, async (req, res) => {
+  const title = typeof req.body?.title === 'string' ? req.body.title.trim() : '';
+  const statement = typeof req.body?.statement === 'string' ? req.body.statement.trim() : '';
+  if (!title || title.length > 160 || statement.length > 500) {
+    return res.status(400).json({error:'Enter a question of up to 160 characters and an optional description of up to 500 characters.'});
+  }
+
+  const angle = Math.random() * Math.PI * 2;
+  const data = {title, statement, medium:'Spark', pos:[Math.cos(angle)*7, Math.sin(angle)*7, Math.random()*4-2]};
+  const {rows:[question]} = await pool.query(`
+    WITH allowance AS (
+      UPDATE users SET questions_created=questions_created+1
+      WHERE id=$1 AND questions_created < $3
+      RETURNING id, questions_created
+    ), published AS (
+      INSERT INTO nodes(author_id, data)
+      SELECT id, $2::jsonb FROM allowance RETURNING id
+    )
+    SELECT published.id, allowance.questions_created FROM published CROSS JOIN allowance
+  `, [req.user.id, data, questionLimit]);
+  if (!question) return res.status(409).json({error:'You’ve used all five starting questions. Pick an existing question or artwork to build on.'});
+  res.status(201).json({
+    node:{...data, id:Number(question.id), parents:[], mine:true, artist:null, showArtist:false},
+    questionsUsed:question.questions_created
+  });
+});
+app.post('/api/logout',(req,res,next)=>req.logout(e=>{if(e)return next(e);req.session.destroy(()=>{res.clearCookie('butterfly.sid');res.json({ok:true})})}));
 app.get('/api/profile', auth, async (req, res) => {
   const result = await pool.query(
     'SELECT display_name AS "displayName", bio, links FROM artist_profiles WHERE user_id=$1',

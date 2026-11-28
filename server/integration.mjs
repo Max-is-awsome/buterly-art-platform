@@ -113,6 +113,23 @@ try {
   await update('/profile', a, artist, 200);
   assert.equal((await byId(first.id)).artist, null);
   assert.equal((await byId(second.id)).artist, null);
+  const question = {title:'What small thing made your day?'};
+  await request('/questions', {method:'POST', body:question, status:401});
+  await request('/questions', {method:'POST', session:a, body:{title:'  '}, status:400});
+  const attempts = await Promise.all(Array.from({length:6}, () => fetch(origin + '/api/questions', {
+    method:'POST', headers:{Origin:origin, Cookie:a, 'Content-Type':'application/json'},
+    body:JSON.stringify(question)
+  })));
+  assert.deepEqual(attempts.map(r=>r.status).sort(), [201,201,201,201,201,409]);
+  const created = await attempts.find(r=>r.status===201).json();
+  assert.equal((await byId(created.node.id)).medium, 'Spark');
+  assert.deepEqual((await byId(created.node.id)).parents, []);
+  assert.equal((await json('/me', {session:a})).user.questionsUsed, 5);
+  assert.equal((await json('/me', {session:b})).user.questionsUsed, 0);
+  await pool.query('DELETE FROM nodes WHERE id=$1', [created.node.id]);
+  await request('/questions', {method:'POST', session:a, body:question, status:409});
+  await request('/questions', {method:'POST', session:b, body:question, status:201});
+  console.log('PASS: concurrent question submissions respect the permanent per-account limit');
   await request('/logout', {session:a, method:'POST', body:{}});
   await request('/profile', {session:a, status:401});
   console.log('PASS: profile privacy and ownership, credit, drafts, bookmarks, publishing, upload round trip, and logout');

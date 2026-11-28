@@ -85,3 +85,6 @@
 .artist-editor button[type=submit] {margin-top: 18px;}
 .artist-links {list-style: none; padding: 0; margin: 12px 0 0; display: flex; flex-wrap: wrap; gap: 8px 16px;}
 .artist-links a {color: #f0ca95; text-underline-offset: 3px;}
+
+.artist-editor .question-confirm {display: inline-block; width: auto; margin-right: 6px;}
+.remove-artwork {color: #f0a5a5; display: block; margin-top: 12px; padding: 5px 0;}

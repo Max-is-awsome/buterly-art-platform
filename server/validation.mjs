@@ -28,3 +28,14 @@ export const profileSchema = z.object({
   displayName || (!bio && !Object.values(links ?? {}).some(Boolean)), {
   message: 'Add an artist name before saving a bio or links.'
 });
+
+// shortcut: checks common patterns only, use a reviewed moderation system for a wider release.
+export function questionContentError(title, statement) {
+  const text = (title + '\n' + statement).normalize('NFKC').replace(/\p{Cf}/gu, '');
+  if (/[\w.+-]+@[\w.-]+\.[a-z]{2,}|(?<!\d)(?:\+?1[ .-]?)?(?:\(\d{3}\)|\d{3})[ .-]?\d{3}[ .-]?\d{4}(?!\d)/i.test(text)) {
+    return 'Leave phone numbers and email addresses out of public questions.';
+  }
+  if (/\b(?:nigg(?:er|a)s?|faggots?|kikes?|chinks?|send\s+(?:me\s+)?nudes|post\s+(?:your\s+)?nudes)\b/i.test(text)) {
+    return 'Rephrase your question without slurs or requests for explicit images.';
+  }
+}

@@ -1,4 +1,4 @@
-import express from 'express';import pg from 'pg';import session from 'express-session';import pgSession from 'connect-pg-simple';import passport from 'passport';import {Strategy} from 'passport-google-oauth20';import helmet from 'helmet';import {rateLimit} from 'express-rate-limit';import {readFile} from 'node:fs/promises';import {artworkSchema,decodeMedia,profileSchema} from './validation.mjs';
+import express from 'express';import pg from 'pg';import session from 'express-session';import pgSession from 'connect-pg-simple';import passport from 'passport';import {Strategy} from 'passport-google-oauth20';import helmet from 'helmet';import {rateLimit} from 'express-rate-limit';import {readFile} from 'node:fs/promises';import {artworkSchema,decodeMedia,profileSchema,questionContentError} from './validation.mjs';
 for(const key of ['DATABASE_URL','SESSION_SECRET','PUBLIC_ORIGIN'])if(!process.env[key])throw Error(`Missing ${key}`);
 if(process.env.SESSION_SECRET.length<32)throw Error('SESSION_SECRET must contain at least 32 characters');
 const origin=new URL(process.env.PUBLIC_ORIGIN).origin;const production=process.env.NODE_ENV==='production';const pool=new pg.Pool({connectionString:process.env.DATABASE_URL,max:10});await pool.query(await readFile(new URL('./schema.sql',import.meta.url),'utf8'));
@@ -53,6 +53,12 @@ app.post('/api/questions', auth, async (req, res) => {
     return res.status(400).json({error:'Enter a question of up to 160 characters and an optional description of up to 500 characters.'});
   }
 
+  if (req.body.confirmPermanent !== true) {
+    return res.status(400).json({error:'Confirm that your starting question can’t be removed after publishing.'});
+  }
+  const contentError = questionContentError(title, statement);
+  if (contentError) return res.status(400).json({error:contentError});
+
   const angle = Math.random() * Math.PI * 2;
   const data = {title, statement, medium:'Spark', pos:[Math.cos(angle)*7, Math.sin(angle)*7, Math.random()*4-2]};
   const {rows:[question]} = await pool.query(`
@@ -103,6 +109,29 @@ app.put('/api/profile', auth, async (req, res) => {
   }
   res.json({displayName, bio, links: {}});
 });
+app.delete('/api/nodes/:id', auth, async (req, res) => {
+  const id = Number(req.params.id);
+  if (!Number.isSafeInteger(id) || id < 0) return res.status(404).json({error:'Artwork not found.'});
+  const {rowCount} = await pool.query(`
+    WITH target AS (
+      SELECT id, data FROM nodes
+      WHERE id=$1 AND author_id=$2 AND NOT removed AND data->>'medium'<>'Spark'
+      FOR UPDATE
+    ), removed_artwork AS (
+      UPDATE nodes n SET removed=true, show_artist=false, data=jsonb_build_object(
+        'title','Removed artwork','statement','The artist removed this piece. Other artists’ responses are still available.',
+        'medium',target.data->'medium','pos',target.data->'pos'
+      )
+      FROM target WHERE n.id=target.id RETURNING n.id
+    ), removed_media AS (
+      DELETE FROM media USING target, removed_artwork
+      WHERE media.author_id=$2 AND '/api/media/' || media.id=target.data->>'url'
+    )
+    SELECT id FROM removed_artwork
+  `, [id, req.user.id]);
+  if (!rowCount) return res.status(404).json({error:'Artwork not found or can’t be removed.'});
+  res.json({ok:true});
+});
 app.put('/api/nodes/:id/credit', auth, async (req, res) => {
   const id = Number(req.params.id);
   const showArtist = req.body?.showArtist;
@@ -110,7 +139,7 @@ app.put('/api/nodes/:id/credit', auth, async (req, res) => {
     return res.status(400).json({error: 'Invalid artwork or credit setting.'});
   }
   const result = await pool.query(
-    'UPDATE nodes SET show_artist=$1 WHERE id=$2 AND author_id=$3',
+    'UPDATE nodes SET show_artist=$1 WHERE id=$2 AND author_id=$3 AND NOT removed',
     [showArtist, id, req.user.id]
   );
   if (!result.rowCount) return res.status(404).json({error: 'Artwork not found.'});
@@ -119,29 +148,29 @@ app.put('/api/nodes/:id/credit', auth, async (req, res) => {
 app.get('/api/nodes', async (req, res) => {
   const result = await pool.query(`
     WITH RECURSIVE visible(id) AS (
-      SELECT id FROM nodes WHERE author_id IS NOT NULL OR id NOT BETWEEN 0 AND 63
+      SELECT id FROM nodes WHERE NOT removed AND (author_id IS NOT NULL OR id NOT BETWEEN 0 AND 63)
       UNION
-      SELECT node_id FROM bookmarks WHERE user_id=$1
+      SELECT node_id FROM bookmarks JOIN nodes ON nodes.id=bookmarks.node_id WHERE user_id=$1 AND NOT nodes.removed
       UNION
       SELECT parent_id FROM ripples JOIN visible ON ripples.child_id=visible.id
     )
-    SELECT n.id, n.author_id, n.data, n.show_artist, p.display_name, p.bio, p.links,
+    SELECT n.id, n.author_id, n.data, n.removed, n.show_artist, p.display_name, p.bio, p.links,
       ARRAY(SELECT parent_id FROM ripples WHERE child_id=n.id ORDER BY parent_id) AS parents
     FROM nodes n JOIN visible ON visible.id=n.id
     LEFT JOIN artist_profiles p ON p.user_id=n.author_id AND n.show_artist
     ORDER BY n.id LIMIT 10000
   `, [req.user?.id ?? null]);
   res.json(result.rows.map(n => {
-    const mine = !!req.user && String(n.author_id) === String(req.user.id);
+    const mine = !n.removed && !!req.user && String(n.author_id) === String(req.user.id);
     return {
-      ...n.data, id: Number(n.id), parents: n.parents.map(Number), mine,
+      ...n.data, id: Number(n.id), parents: n.parents.map(Number), mine, removed: n.removed,
       artist: n.display_name ? {displayName: n.display_name, bio: n.bio, links: n.links} : null,
       ...(mine ? {showArtist: n.show_artist} : {})
     };
   }));
 });
-app.post('/api/nodes',auth,rateLimit({windowMs:3600000,limit:30}),async(req,res)=>{const parsed=artworkSchema.safeParse(req.body);if(!parsed.success)return res.status(400).json({error:'Check the title, artwork, medium, and inspirations.'});const n=parsed.data;let bytes;try{if(n.url)bytes=decodeMedia(n.url,n.mime)}catch(e){return res.status(400).json({error:e.message})}const c=await pool.connect();try{await c.query('BEGIN');const p=await c.query('SELECT id,data FROM nodes WHERE id=ANY($1::bigint[])',[n.parents]);if(p.rowCount!==n.parents.length){await c.query('ROLLBACK');return res.status(400).json({error:'An inspiration no longer exists'})}const pos=p.rows[0].data.pos;const data={title:n.title,medium:n.medium,statement:n.statement,text:n.text,pos:[pos[0]+1.2,pos[1]+1.4,pos[2]+1]};if(bytes){const m=await c.query('INSERT INTO media(author_id,mime,bytes) VALUES($1,$2,$3) RETURNING id',[req.user.id,n.mime,bytes]);data.url=`/api/media/${m.rows[0].id}`;data.mime=n.mime}const r=await c.query('INSERT INTO nodes(author_id,data,show_artist) VALUES($1,$2,$3) RETURNING id',[req.user.id,data,n.showArtist]);const id=Number(r.rows[0].id);for(const parent of n.parents)await c.query('INSERT INTO ripples VALUES($1,$2)',[parent,id]);await c.query('DELETE FROM drafts WHERE user_id=$1',[req.user.id]);await c.query('COMMIT');res.status(201).json({...data,id,parents:n.parents,mine:true,showArtist:n.showArtist})}catch(e){await c.query('ROLLBACK');throw e}finally{c.release()}});
-app.get('/api/media/:id',async(req,res)=>{if(!/^\d+$/.test(req.params.id))return res.sendStatus(404);const r=await pool.query('SELECT mime,bytes FROM media WHERE id=$1',[req.params.id]);if(!r.rowCount)return res.sendStatus(404);res.set('Content-Type',r.rows[0].mime).set('Cache-Control','public,max-age=86400').send(r.rows[0].bytes)});
-app.get('/api/private',auth,async(req,res)=>{const[d,b]=await Promise.all([pool.query('SELECT data FROM drafts WHERE user_id=$1',[req.user.id]),pool.query('SELECT node_id FROM bookmarks WHERE user_id=$1',[req.user.id])]);res.json({draft:d.rows[0]?.data||null,saved:b.rows.map(x=>Number(x.node_id))})});app.put('/api/draft',auth,async(req,res)=>{if(JSON.stringify(req.body).length>60000)return res.status(400).json({error:'Draft too large'});await pool.query('INSERT INTO drafts(user_id,data) VALUES($1,$2) ON CONFLICT(user_id) DO UPDATE SET data=EXCLUDED.data,updated_at=now()',[req.user.id,req.body]);res.json({ok:true})});app.put('/api/bookmarks/:id',auth,async(req,res)=>{if(!/^\d+$/.test(req.params.id))return res.sendStatus(400);if(req.body.saved)await pool.query('INSERT INTO bookmarks VALUES($1,$2) ON CONFLICT DO NOTHING',[req.user.id,req.params.id]);else await pool.query('DELETE FROM bookmarks WHERE user_id=$1 AND node_id=$2',[req.user.id,req.params.id]);res.json({ok:true})});
+app.post('/api/nodes',auth,rateLimit({windowMs:3600000,limit:30}),async(req,res)=>{const parsed=artworkSchema.safeParse(req.body);if(!parsed.success)return res.status(400).json({error:'Check the title, artwork, medium, and inspirations.'});const n=parsed.data;let bytes;try{if(n.url)bytes=decodeMedia(n.url,n.mime)}catch(e){return res.status(400).json({error:e.message})}const c=await pool.connect();try{await c.query('BEGIN');const p=await c.query('SELECT id,data FROM nodes WHERE id=ANY($1::bigint[]) AND NOT removed FOR SHARE',[n.parents]);if(p.rowCount!==n.parents.length){await c.query('ROLLBACK');return res.status(400).json({error:'An inspiration no longer exists'})}const pos=p.rows[0].data.pos;const data={title:n.title,medium:n.medium,statement:n.statement,text:n.text,pos:[pos[0]+1.2,pos[1]+1.4,pos[2]+1]};if(bytes){const m=await c.query('INSERT INTO media(author_id,mime,bytes) VALUES($1,$2,$3) RETURNING id',[req.user.id,n.mime,bytes]);data.url=`/api/media/${m.rows[0].id}`;data.mime=n.mime}const r=await c.query('INSERT INTO nodes(author_id,data,show_artist) VALUES($1,$2,$3) RETURNING id',[req.user.id,data,n.showArtist]);const id=Number(r.rows[0].id);for(const parent of n.parents)await c.query('INSERT INTO ripples VALUES($1,$2)',[parent,id]);await c.query('DELETE FROM drafts WHERE user_id=$1',[req.user.id]);await c.query('COMMIT');res.status(201).json({...data,id,parents:n.parents,mine:true,showArtist:n.showArtist})}catch(e){await c.query('ROLLBACK');throw e}finally{c.release()}});
+app.get('/api/media/:id',async(req,res)=>{if(!/^\d+$/.test(req.params.id))return res.sendStatus(404);const r=await pool.query('SELECT mime,bytes FROM media WHERE id=$1',[req.params.id]);if(!r.rowCount)return res.sendStatus(404);res.set('Content-Type',r.rows[0].mime).send(r.rows[0].bytes)});
+app.get('/api/private',auth,async(req,res)=>{const[d,b]=await Promise.all([pool.query('SELECT data FROM drafts WHERE user_id=$1',[req.user.id]),pool.query('SELECT node_id FROM bookmarks JOIN nodes ON nodes.id=bookmarks.node_id WHERE user_id=$1 AND NOT nodes.removed',[req.user.id])]);res.json({draft:d.rows[0]?.data||null,saved:b.rows.map(x=>Number(x.node_id))})});app.put('/api/draft',auth,async(req,res)=>{if(JSON.stringify(req.body).length>60000)return res.status(400).json({error:'Draft too large'});await pool.query('INSERT INTO drafts(user_id,data) VALUES($1,$2) ON CONFLICT(user_id) DO UPDATE SET data=EXCLUDED.data,updated_at=now()',[req.user.id,req.body]);res.json({ok:true})});app.put('/api/bookmarks/:id',auth,async(req,res)=>{if(!/^\d+$/.test(req.params.id))return res.sendStatus(400);if(req.body.saved)await pool.query('INSERT INTO bookmarks(user_id,node_id) SELECT $1,id FROM nodes WHERE id=$2 AND NOT removed ON CONFLICT DO NOTHING',[req.user.id,req.params.id]);else await pool.query('DELETE FROM bookmarks WHERE user_id=$1 AND node_id=$2',[req.user.id,req.params.id]);res.json({ok:true})});
 app.post('/api/reports',auth,async(req,res)=>{const reason=String(req.body.reason||'').trim();if(!Number.isSafeInteger(req.body.nodeId)||reason.length<5||reason.length>2000)return res.status(400).json({error:'Provide an artwork and a reason (5–2000 characters)'});await pool.query('INSERT INTO reports(user_id,node_id,reason) VALUES($1,$2,$3)',[req.user.id,req.body.nodeId,reason]);res.status(201).json({ok:true})});
 app.use((err,req,res,_next)=>{console.error('Request failed',req.method,req.path,err.code||err.name);res.status(err.status===413?413:500).json({error:err.status===413?'Upload is too large':'Unable to complete request. Please try again.'})});const server=app.listen(Number(process.env.PORT||3000),'0.0.0.0');process.on('SIGTERM',()=>server.close(()=>pool.end().then(()=>process.exit(0))));

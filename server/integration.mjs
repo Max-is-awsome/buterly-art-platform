@@ -113,7 +113,28 @@ try {
   await update('/profile', a, artist, 200);
   assert.equal((await byId(first.id)).artist, null);
   assert.equal((await byId(second.id)).artist, null);
-  const question = {title:'What small thing made your day?'};
+  const reply = await create(b, {...artwork, parents:[second.id]}, 201);
+  await request('/nodes/' + second.id, {method:'DELETE', status:401});
+  await request('/nodes/' + second.id, {method:'DELETE', session:b, status:404});
+  await request('/nodes/' + second.id, {method:'DELETE', session:a});
+  const removed = await byId(second.id);
+  assert.equal(removed.removed, true);
+  assert.equal(removed.title, 'Removed artwork');
+  assert.equal(removed.url, undefined);
+  assert.equal(removed.artist, null);
+  assert.deepEqual((await byId(reply.id)).parents, [second.id]);
+  await request(uploaded.url.slice('/api'.length), {status:404});
+  await create(b, {...artwork, parents:[second.id]}, 400);
+  await request('/nodes/' + first.id, {method:'DELETE', session:a});
+  assert.equal(await byId(first.id), undefined);
+  assert.deepEqual((await json('/private', {session:b})).saved, []);
+  console.log('PASS: only owners can remove artwork, uploads are deleted, and responses stay available');
+
+  const question = {title:'What small thing made your day?', confirmPermanent:true};
+  await request('/questions', {method:'POST', session:a, body:{title:question.title}, status:400});
+  await request('/questions', {method:'POST', session:a, body:{...question, statement:'Email test@example.test'}, status:400});
+  await request('/questions', {method:'POST', session:a, body:{...question, statement:'Text (202) 555-0148'}, status:400});
+  await request('/questions', {method:'POST', session:a, body:{...question, statement:'send me nudes'}, status:400});
   await request('/questions', {method:'POST', body:question, status:401});
   await request('/questions', {method:'POST', session:a, body:{title:'  '}, status:400});
   const attempts = await Promise.all(Array.from({length:6}, () => fetch(origin + '/api/questions', {
@@ -126,7 +147,8 @@ try {
   assert.deepEqual((await byId(created.node.id)).parents, []);
   assert.equal((await json('/me', {session:a})).user.questionsUsed, 5);
   assert.equal((await json('/me', {session:b})).user.questionsUsed, 0);
-  await pool.query('DELETE FROM nodes WHERE id=$1', [created.node.id]);
+  await request('/nodes/' + created.node.id, {method:'DELETE', session:a, status:404});
+  assert.equal((await byId(created.node.id)).title, question.title);
   await request('/questions', {method:'POST', session:a, body:question, status:409});
   await request('/questions', {method:'POST', session:b, body:question, status:201});
   console.log('PASS: concurrent question submissions respect the permanent per-account limit');

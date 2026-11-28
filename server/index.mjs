@@ -2,7 +2,36 @@ import express from 'express';import pg from 'pg';import session from 'express-s
 for(const key of ['DATABASE_URL','SESSION_SECRET','PUBLIC_ORIGIN'])if(!process.env[key])throw Error(`Missing ${key}`);
 if(process.env.SESSION_SECRET.length<32)throw Error('SESSION_SECRET must contain at least 32 characters');
 const origin=new URL(process.env.PUBLIC_ORIGIN).origin;const production=process.env.NODE_ENV==='production';const pool=new pg.Pool({connectionString:process.env.DATABASE_URL,max:10});await pool.query(await readFile(new URL('./schema.sql',import.meta.url),'utf8'));
-const seed=JSON.parse(await readFile(new URL('./seed.json',import.meta.url),'utf8'));const db=await pool.connect();try{await db.query('BEGIN');await db.query('SELECT pg_advisory_xact_lock(421109)');for(const n of seed){const {id,parents,...data}=n;await db.query('INSERT INTO nodes(id,data) VALUES($1,$2) ON CONFLICT DO NOTHING',[id,data])}for(const n of seed)for(const p of n.parents)await db.query('INSERT INTO ripples VALUES($1,$2) ON CONFLICT DO NOTHING',[p,n.id]);await db.query("SELECT setval(pg_get_serial_sequence('nodes','id'),GREATEST((SELECT MAX(id) FROM nodes),64))");await db.query('COMMIT')}catch(e){await db.query('ROLLBACK');throw e}finally{db.release()}
+const seed = JSON.parse(await readFile(new URL('./seed.json', import.meta.url), 'utf8'));
+const db = await pool.connect();
+try {
+  await db.query('BEGIN');
+  await db.query('SELECT pg_advisory_xact_lock(421109)');
+  for (const {id, parents, ...data} of seed) {
+    const result = await db.query(
+      `INSERT INTO nodes(id, data) VALUES($1,$2)
+       ON CONFLICT (id) DO UPDATE SET data=EXCLUDED.data WHERE nodes.author_id IS NULL`,
+      [id, data]
+    );
+    if (!result.rowCount) throw Error('Gallery ID conflicts with a user artwork');
+  }
+  for (const {id, parents} of seed) {
+    for (const parent of parents) {
+      await db.query('INSERT INTO ripples VALUES($1,$2) ON CONFLICT DO NOTHING', [parent,id]);
+    }
+  }
+  await db.query('LOCK TABLE nodes IN SHARE ROW EXCLUSIVE MODE');
+  await db.query(`
+    SELECT setval(pg_get_serial_sequence('nodes','id'),
+      GREATEST((SELECT MAX(id) FROM nodes), (SELECT last_value FROM nodes_id_seq)))
+  `);
+  await db.query('COMMIT');
+} catch (error) {
+  await db.query('ROLLBACK');
+  throw error;
+} finally {
+  db.release();
+}
 const app=express();app.set('trust proxy',1);app.disable('x-powered-by');app.use(helmet());app.use('/api',rateLimit({windowMs:60000,limit:180}));app.use(express.json({limit:'14mb'}));app.use(session({store:new(pgSession(session))({pool,createTableIfMissing:true}),secret:process.env.SESSION_SECRET,resave:false,saveUninitialized:false,name:'butterfly.sid',cookie:{httpOnly:true,secure:production,sameSite:'lax',maxAge:7*86400000}}));
 const googleConfigured=!!(process.env.GOOGLE_CLIENT_ID&&process.env.GOOGLE_CLIENT_SECRET);if(googleConfigured)passport.use(new Strategy({clientID:process.env.GOOGLE_CLIENT_ID,clientSecret:process.env.GOOGLE_CLIENT_SECRET,callbackURL:`${origin}/api/auth/google/callback`,state:true},async(_access,_refresh,profile,done)=>{try{if(!profile._json.email_verified)return done(null,false);const result=await pool.query('INSERT INTO users(google_id,email) VALUES($1,$2) ON CONFLICT(google_id) DO UPDATE SET email=EXCLUDED.email RETURNING id',[profile.id,profile.emails[0].value]);done(null,{id:result.rows[0].id})}catch(e){done(e)}}));passport.serializeUser((u,done)=>done(null,u.id));passport.deserializeUser(async(id,done)=>{try{const r=await pool.query('SELECT id FROM users WHERE id=$1',[id]);done(null,r.rows[0]||false)}catch(e){done(e)}});app.use(passport.initialize());app.use(passport.session());
 app.use('/api',(req,res,next)=>{res.set('Cache-Control','no-store');if(!['GET','HEAD','OPTIONS'].includes(req.method)&&req.get('origin')!==origin)return res.status(403).json({error:'Untrusted request origin'});next()});
@@ -54,12 +83,19 @@ app.put('/api/nodes/:id/credit', auth, async (req, res) => {
 });
 app.get('/api/nodes', async (req, res) => {
   const result = await pool.query(`
+    WITH RECURSIVE visible(id) AS (
+      SELECT id FROM nodes WHERE author_id IS NOT NULL OR id NOT BETWEEN 0 AND 63
+      UNION
+      SELECT node_id FROM bookmarks WHERE user_id=$1
+      UNION
+      SELECT parent_id FROM ripples JOIN visible ON ripples.child_id=visible.id
+    )
     SELECT n.id, n.author_id, n.data, n.show_artist, p.display_name, p.bio, p.links,
       ARRAY(SELECT parent_id FROM ripples WHERE child_id=n.id ORDER BY parent_id) AS parents
-    FROM nodes n
+    FROM nodes n JOIN visible ON visible.id=n.id
     LEFT JOIN artist_profiles p ON p.user_id=n.author_id AND n.show_artist
     ORDER BY n.id LIMIT 10000
-  `);
+  `, [req.user?.id ?? null]);
   res.json(result.rows.map(n => {
     const mine = !!req.user && String(n.author_id) === String(req.user.id);
     return {

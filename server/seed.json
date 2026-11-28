@@ -1,887 +1,285 @@
 [
   {
-    "id": 0,
-    "title": "What does silence sound like?",
+    "id": 1000001,
+    "title": "What if everyday objects made life harder?",
     "medium": "Spark",
-    "statement": "An open question. An invitation to interpret it in your own way.",
-    "parents": [],
+    "statement": "Start with something ordinary. Change one thing so it fights back when someone tries to use it.",
     "pos": [
-      3,
       0,
-      0
-    ]
-  },
-  {
-    "id": 1,
-    "title": "What makes somewhere home?",
-    "medium": "Spark",
-    "statement": "An open question. An invitation to interpret it in your own way.",
-    "parents": [],
-    "pos": [
-      1.3510325085985093,
-      2.6785651309441816,
-      2.701852722204604
-    ]
-  },
-  {
-    "id": 2,
-    "title": "If time stopped, what would you miss?",
-    "medium": "Spark",
-    "statement": "An open question. An invitation to interpret it in your own way.",
-    "parents": [],
-    "pos": [
-      -1.2008680548395199,
-      2.7491664036332812,
-      -3.9846584353433627
-    ]
-  },
-  {
-    "id": 3,
-    "title": "Can imperfection be beautiful?",
-    "medium": "Spark",
-    "statement": "An open question. An invitation to interpret it in your own way.",
-    "parents": [],
-    "pos": [
-      -2.9593302292063726,
-      -0.4923053874429548,
-      3.1746714553966107
-    ]
-  },
-  {
-    "id": 4,
-    "title": "What does it mean to be free?",
-    "medium": "Spark",
-    "statement": "An open question. An invitation to interpret it in your own way.",
-    "parents": [],
-    "pos": [
-      -2.018934735272187,
-      -2.218986826168967,
-      -0.6973071248919186
-    ]
-  },
-  {
-    "id": 5,
-    "title": "What would humanity look like from elsewhere?",
-    "medium": "Spark",
-    "statement": "An open question. An invitation to interpret it in your own way.",
-    "parents": [],
-    "pos": [
-      2.1177444989987824,
-      -2.1248901705642096,
-      -2.1462916720017398
-    ]
-  },
-  {
-    "id": 6,
-    "title": "Somewhere Else",
-    "medium": "Mixed media",
-    "statement": "A fictional study in belonging, distance, and the things that connect us.",
-    "parents": [
+      3.8,
       0
     ],
-    "pos": [
-      4.632815613339768,
-      -1.4351026070616926,
-      3.862631106197112
-    ]
+    "parents": []
   },
   {
-    "id": 7,
-    "title": "The quiet between",
-    "medium": "Visual art",
-    "statement": "A fictional study in belonging, distance, and the things that connect us.",
-    "parents": [
+    "id": 1000002,
+    "title": "What makes a place feel like home?",
+    "medium": "Spark",
+    "statement": "Think of one small thing somebody does that makes you feel like you belong there.",
+    "pos": [
+      -4.5,
+      -2,
+      0
+    ],
+    "parents": []
+  },
+  {
+    "id": 1000003,
+    "title": "What do you notice after the rain?",
+    "medium": "Spark",
+    "statement": "Go somewhere familiar just after a storm. Look down, listen, and share one thing you usually miss.",
+    "pos": [
+      4.5,
+      -2,
+      0
+    ],
+    "parents": []
+  },
+  {
+    "id": 1000004,
+    "title": "The Nightstand That Won’t Open",
+    "medium": "3D art",
+    "statement": "A familiar piece of furniture turns stubborn. Rubber bands hold the drawers shut, and a cut through the cabinet shows what’s getting in the way.",
+    "pos": [
+      -3.9,
+      6.0,
       1
     ],
-    "pos": [
-      0.9109000664526866,
-      4.763691957813444,
-      -3.5502681343260183
-    ]
+    "parents": [
+      1000001
+    ],
+    "url": "https://butterfly-human-creativity.vercel.app/gallery/nightstand.webp",
+    "mime": "image/webp",
+    "alt": "Two views of a wooden nightstand with partly open drawers held by rubber bands.",
+    "galleryCredit": "Original sculpture from the artist’s AP 3-D Art and Design portfolio"
   },
   {
-    "id": 8,
-    "title": "A place to return",
-    "medium": "Photography",
-    "statement": "A fictional study in belonging, distance, and the things that connect us.",
+    "id": 1000005,
+    "title": "Please Hold",
+    "medium": "3D art",
+    "statement": "The nightstand makes putting something away a chore. Here the same trick moves to a phone: you have to lift a rock and solve a puzzle box just to answer a call.",
+    "pos": [
+      1.7,
+      7.5,
+      -2
+    ],
     "parents": [
+      1000004
+    ],
+    "url": "https://butterfly-human-creativity.vercel.app/gallery/answering-machine.webp",
+    "mime": "image/webp",
+    "alt": "A large rock on an open wooden chest, with a puzzle box and cords on the ground.",
+    "galleryCredit": "Original sculpture from the artist’s AP 3-D Art and Design portfolio"
+  },
+  {
+    "id": 1000006,
+    "title": "Pretty Gears, Bad Machine",
+    "medium": "3D art",
+    "statement": "The phone makes you work for an answer. These engraved gears ask a related question: how much worse can a machine work before looking good stops being worth it?",
+    "pos": [
+      5.5,
+      5,
+      1
+    ],
+    "parents": [
+      1000005
+    ],
+    "url": "https://butterfly-human-creativity.vercel.app/gallery/pretty-gears.webp",
+    "mime": "image/webp",
+    "alt": "Two views of blue and dark acrylic gears in a shallow plywood case.",
+    "galleryCredit": "Original sculpture from the artist’s AP 3-D Art and Design portfolio"
+  },
+  {
+    "id": 1000007,
+    "title": "Your Call Is Important",
+    "medium": "Writing",
+    "statement": "A short poem from the other end of the line in “Please Hold.”",
+    "pos": [
+      -1,
+      9.0,
       2
     ],
-    "pos": [
-      -0.7792399078214457,
-      4.786991243574446,
-      1.3732597152795816
-    ]
-  },
-  {
-    "id": 9,
-    "title": "Soft boundaries",
-    "medium": "Music",
-    "statement": "A fictional study in belonging, distance, and the things that connect us.",
     "parents": [
-      3
+      1000005
     ],
-    "pos": [
-      -4.4994208125838115,
-      -1.8104453461200176,
-      1.5250019666197738
-    ]
+    "text": "The first ring finds me\nwith both hands under a rock.\n\nThe second finds a box\nthat only opens sideways.\n\nBy the third I’m laughing.\nBy the fourth you’ve hung up.\n\nI leave the rock on the floor\nin case you call again.",
+    "galleryCredit": "AI-generated gallery sample"
   },
   {
-    "id": 10,
-    "title": "After the rain",
-    "medium": "Writing",
-    "statement": "A fictional study in belonging, distance, and the things that connect us.",
-    "parents": [
-      4
-    ],
-    "pos": [
-      -3.855172829041965,
-      -2.9428119984491996,
-      -3.622313448026495
-    ]
-  },
-  {
-    "id": 11,
-    "title": "Things we carry",
-    "medium": "Film",
-    "statement": "A fictional study in belonging, distance, and the things that connect us.",
-    "parents": [
-      5
-    ],
-    "pos": [
-      3.8691137673951315,
-      -2.9244586943489983,
-      3.8171403779707878
-    ]
-  },
-  {
-    "id": 12,
-    "title": "Still becoming",
-    "medium": "3D art",
-    "statement": "A fictional study in belonging, distance, and the things that connect us.",
-    "parents": [
-      6
-    ],
-    "pos": [
-      5.2573186065852635,
-      -2.2024080159798696,
-      -2.0071572040822843
-    ]
-  },
-  {
-    "id": 13,
-    "title": "An open window",
-    "medium": "Mixed media",
-    "statement": "A fictional study in belonging, distance, and the things that connect us.",
-    "parents": [
-      7
-    ],
-    "pos": [
-      0.784560876682105,
-      5.64574744659906,
-      -0.8570101611835508
-    ]
-  },
-  {
-    "id": 14,
-    "title": "Unwritten",
+    "id": 1000008,
+    "title": "Two Slices",
     "medium": "Visual art",
-    "statement": "A fictional study in belonging, distance, and the things that connect us.",
-    "parents": [
-      8
-    ],
+    "statement": "One slice for the person who woke up first. One for whoever comes down next. A little proof that somebody thought of you.",
     "pos": [
-      -0.8911727116763484,
-      5.629903302718745,
-      3.271065018105767
-    ]
-  },
-  {
-    "id": 15,
-    "title": "The shape of absence",
-    "medium": "Photography",
-    "statement": "A fictional study in belonging, distance, and the things that connect us.",
-    "parents": [
-      9
-    ],
-    "pos": [
-      -5.3730142471833995,
-      -1.9028184095084342,
-      -3.967115413772463
-    ]
-  },
-  {
-    "id": 16,
-    "title": "In the distance",
-    "medium": "Music",
-    "statement": "A fictional study in belonging, distance, and the things that connect us.",
-    "parents": [
-      10
-    ],
-    "pos": [
-      -4.2096716840072546,
-      -3.843001992305953,
-      2.5795869317794695
-    ]
-  },
-  {
-    "id": 17,
-    "title": "A small infinity",
-    "medium": "Writing",
-    "statement": "A fictional study in belonging, distance, and the things that connect us.",
-    "parents": [
-      11
-    ],
-    "pos": [
-      4.055789795288983,
-      -4.0050679315624285,
-      0.16277302939945942
-    ]
-  },
-  {
-    "id": 18,
-    "title": "Where light rests",
-    "medium": "Film",
-    "statement": "A fictional study in belonging, distance, and the things that connect us.",
-    "parents": [
-      12
-    ],
-    "pos": [
-      6.387063560751379,
-      -1.4518674426137903,
-      -2.8196425496570123
-    ]
-  },
-  {
-    "id": 19,
-    "title": "Almost home",
-    "medium": "3D art",
-    "statement": "A fictional study in belonging, distance, and the things that connect us.",
-    "parents": [
-      13
-    ],
-    "pos": [
-      2.2406444600398427,
-      6.154836505033481,
-      3.9956003629800843
-    ]
-  },
-  {
-    "id": 20,
-    "title": "Tender geometry",
-    "medium": "Mixed media",
-    "statement": "A fictional study in belonging, distance, and the things that connect us.",
-    "parents": [
-      14
-    ],
-    "pos": [
-      -2.560788899076138,
-      6.028669854484356,
-      -3.0730186452946673
-    ]
-  },
-  {
-    "id": 21,
-    "title": "Between worlds",
-    "medium": "Visual art",
-    "statement": "A fictional study in belonging, distance, and the things that connect us.",
-    "parents": [
-      15
-    ],
-    "pos": [
-      -6.535329324289207,
-      -0.43814452305783186,
-      0.5364489105826286
-    ]
-  },
-  {
-    "id": 22,
-    "title": "Slowly, slowly",
-    "medium": "Photography",
-    "statement": "A fictional study in belonging, distance, and the things that connect us.",
-    "parents": [
-      16
-    ],
-    "pos": [
-      -3.3350583802766436,
-      -5.63736512922008,
-      2.2818705345495127
-    ]
-  },
-  {
-    "id": 23,
-    "title": "The other side",
-    "medium": "Music",
-    "statement": "A fictional study in belonging, distance, and the things that connect us.",
-    "parents": [
-      17
-    ],
-    "pos": [
-      3.011194909125303,
-      -5.816803694406221,
-      -3.90172289429373
-    ]
-  },
-  {
-    "id": 24,
-    "title": "Somewhere Else",
-    "medium": "Writing",
-    "statement": "A fictional study in belonging, distance, and the things that connect us.",
-    "parents": [
-      18
-    ],
-    "pos": [
-      7.361892382688032,
-      0.7500270299928817,
-      3.472341349521672
-    ]
-  },
-  {
-    "id": 25,
-    "title": "The quiet between",
-    "medium": "Film",
-    "statement": "A fictional study in belonging, distance, and the things that connect us.",
-    "parents": [
-      19
-    ],
-    "pos": [
-      4.6456500345131015,
-      5.7600291454842845,
-      -1.2192424844088667
-    ]
-  },
-  {
-    "id": 26,
-    "title": "A place to return",
-    "medium": "3D art",
-    "statement": "A fictional study in belonging, distance, and the things that connect us.",
-    "parents": [
-      20
-    ],
-    "pos": [
-      -4.930367977127719,
-      5.518285205579133,
-      -1.6742178580737017
-    ]
-  },
-  {
-    "id": 27,
-    "title": "Soft boundaries",
-    "medium": "Mixed media",
-    "statement": "A fictional study in belonging, distance, and the things that connect us.",
-    "parents": [
-      21
-    ],
-    "pos": [
-      -7.166358663261068,
-      1.8448044637584318,
-      3.688357938389809
-    ]
-  },
-  {
-    "id": 28,
-    "title": "After the rain",
-    "medium": "Visual art",
-    "statement": "A fictional study in belonging, distance, and the things that connect us.",
-    "parents": [
-      22
-    ],
-    "pos": [
-      -1.689358304414312,
-      -7.2045866307031385,
-      -3.7653260707969194
-    ]
-  },
-  {
-    "id": 29,
-    "title": "Things we carry",
-    "medium": "Photography",
-    "statement": "A fictional study in belonging, distance, and the things that connect us.",
-    "parents": [
-      23
-    ],
-    "pos": [
-      1.4329404919161257,
-      -7.259936745359919,
-      1.8646976247486882
-    ]
-  },
-  {
-    "id": 30,
-    "title": "Still becoming",
-    "medium": "Music",
-    "statement": "A fictional study in belonging, distance, and the things that connect us.",
-    "parents": [
-      24
-    ],
-    "pos": [
-      7.728105435400427,
-      2.8877130015523327,
-      1.015293451048145
-    ]
-  },
-  {
-    "id": 31,
-    "title": "An open window",
-    "medium": "Writing",
-    "statement": "A fictional study in belonging, distance, and the things that connect us.",
-    "parents": [
-      25
-    ],
-    "pos": [
-      6.477351261538252,
-      5.109444258884602,
-      -3.3620396452148977
-    ]
-  },
-  {
-    "id": 32,
-    "title": "Unwritten",
-    "medium": "Film",
-    "statement": "A fictional study in belonging, distance, and the things that connect us.",
-    "parents": [
-      26
-    ],
-    "pos": [
-      -6.5488597663839,
-      5.017463080107139,
-      3.943000360515794
-    ]
-  },
-  {
-    "id": 33,
-    "title": "The shape of absence",
-    "medium": "3D art",
-    "statement": "A fictional study in belonging, distance, and the things that connect us.",
-    "parents": [
-      27
-    ],
-    "pos": [
-      -7.59977210001323,
-      3.2102903338888984,
-      -2.453047727227556
-    ]
-  },
-  {
-    "id": 34,
-    "title": "In the distance",
-    "medium": "Mixed media",
-    "statement": "A fictional study in belonging, distance, and the things that connect us.",
-    "parents": [
-      28
-    ],
-    "pos": [
-      -1.0340348052412567,
-      -8.18494178486015,
-      -0.3252764045551608
-    ]
-  },
-  {
-    "id": 35,
-    "title": "A small infinity",
-    "medium": "Visual art",
-    "statement": "A fictional study in belonging, distance, and the things that connect us.",
-    "parents": [
-      29
-    ],
-    "pos": [
-      1.113514572308513,
-      -8.174508260272088,
-      2.932761280293169
-    ]
-  },
-  {
-    "id": 36,
-    "title": "Where light rests",
-    "medium": "Photography",
-    "statement": "A fictional study in belonging, distance, and the things that connect us.",
-    "parents": [
-      30
-    ],
-    "pos": [
-      8.48178293805282,
-      3.296870969837319,
-      -3.9999230699866217
-    ]
-  },
-  {
-    "id": 37,
-    "title": "Almost home",
-    "medium": "Music",
-    "statement": "A fictional study in belonging, distance, and the things that connect us.",
-    "parents": [
-      31
-    ],
-    "pos": [
-      6.951984975547021,
-      5.871959204538847,
-      2.966274988619984
-    ]
-  },
-  {
-    "id": 38,
-    "title": "Tender geometry",
-    "medium": "Writing",
-    "statement": "A fictional study in belonging, distance, and the things that connect us.",
-    "parents": [
-      32,
+      -7,
+      -0.3,
       2
     ],
-    "pos": [
-      -6.7616002705327185,
-      6.090218533150668,
-      -0.3747020003645125
-    ]
-  },
-  {
-    "id": 39,
-    "title": "Between worlds",
-    "medium": "Film",
-    "statement": "A fictional study in belonging, distance, and the things that connect us.",
     "parents": [
-      33
+      1000002
     ],
-    "pos": [
-      -8.755893401289262,
-      2.4787760579082474,
-      -2.413669188080976
-    ]
+    "url": "/gallery/two-slices.jpg",
+    "mime": "image/jpeg",
+    "alt": "Gouache-style painting of two slices of jam toast and mismatched mugs on a blue kitchen table.",
+    "galleryCredit": "AI-generated gallery sample"
   },
   {
-    "id": 40,
-    "title": "Slowly, slowly",
-    "medium": "3D art",
-    "statement": "A fictional study in belonging, distance, and the things that connect us.",
-    "parents": [
-      34
-    ],
-    "pos": [
-      -2.6139723972630486,
-      -8.716487154028671,
-      3.9343509817373796
-    ]
-  },
-  {
-    "id": 41,
-    "title": "The other side",
-    "medium": "Mixed media",
-    "statement": "A fictional study in belonging, distance, and the things that connect us.",
-    "parents": [
-      35
-    ],
-    "pos": [
-      3.0316213917717576,
-      -8.580167349006187,
-      -3.38866218925237
-    ]
-  },
-  {
-    "id": 42,
-    "title": "Somewhere Else",
-    "medium": "Visual art",
-    "statement": "A fictional study in belonging, distance, and the things that connect us.",
-    "parents": [
-      36
-    ],
-    "pos": [
-      9.86344619844174,
-      1.3095530116971863,
-      1.063205423156509
-    ]
-  },
-  {
-    "id": 43,
-    "title": "The quiet between",
-    "medium": "Photography",
-    "statement": "A fictional study in belonging, distance, and the things that connect us.",
-    "parents": [
-      37
-    ],
-    "pos": [
-      5.626304497831701,
-      8.206533841865197,
-      1.8206601945224012
-    ]
-  },
-  {
-    "id": 44,
-    "title": "A place to return",
-    "medium": "Music",
-    "statement": "A fictional study in belonging, distance, and the things that connect us.",
-    "parents": [
-      38
-    ],
-    "pos": [
-      -5.156832287810772,
-      8.509381925580277,
-      -3.748292194310383
-    ]
-  },
-  {
-    "id": 45,
-    "title": "Soft boundaries",
+    "id": 1000009,
+    "title": "Leave the Plate Out",
     "medium": "Writing",
-    "statement": "A fictional study in belonging, distance, and the things that connect us.",
-    "parents": [
-      39
-    ],
+    "statement": "A poem for the second plate in “Two Slices,” told by the person who comes home late.",
     "pos": [
-      -9.943784663535045,
-      -0.35163413549485817,
-      3.70727402167114
-    ]
+      -9,
+      -3.5,
+      -1
+    ],
+    "parents": [
+      1000008
+    ],
+    "text": "The house is asleep.\nI know which stair to skip.\n\nOn the blue table,\nunder a plate turned upside down,\none piece of toast.\n\nThe jam has gone dark at the edges.\nI eat it standing there\nbefore I take my coat off.",
+    "galleryCredit": "AI-generated gallery sample"
   },
   {
-    "id": 46,
-    "title": "After the rain",
-    "medium": "Film",
-    "statement": "A fictional study in belonging, distance, and the things that connect us.",
-    "parents": [
-      40
-    ],
-    "pos": [
-      -5.7392717566789,
-      -8.127930837734034,
-      -1.7191489364288297
-    ]
-  },
-  {
-    "id": 47,
-    "title": "Things we carry",
-    "medium": "3D art",
-    "statement": "A fictional study in belonging, distance, and the things that connect us.",
-    "parents": [
-      41
-    ],
-    "pos": [
-      6.169972822660335,
-      -7.806019175458951,
-      -1.171894778067035
-    ]
-  },
-  {
-    "id": 48,
-    "title": "Still becoming",
-    "medium": "Mixed media",
-    "statement": "A fictional study in belonging, distance, and the things that connect us.",
-    "parents": [
-      42
-    ],
-    "pos": [
-      10.592356494539418,
-      -2.1076014548743833,
-      3.447444625673336
-    ]
-  },
-  {
-    "id": 49,
-    "title": "An open window",
-    "medium": "Visual art",
-    "statement": "A fictional study in belonging, distance, and the things that connect us.",
-    "parents": [
-      43
-    ],
-    "pos": [
-      2.984445527137785,
-      10.379454942122312,
-      -3.9123532252288564
-    ]
-  },
-  {
-    "id": 50,
-    "title": "Unwritten",
-    "medium": "Photography",
-    "statement": "A fictional study in belonging, distance, and the things that connect us.",
-    "parents": [
-      44
-    ],
-    "pos": [
-      -2.542509887361285,
-      10.496458615774662,
-      2.322444736849257
-    ]
-  },
-  {
-    "id": 51,
-    "title": "The shape of absence",
+    "id": 1000010,
+    "title": "Kitchen Light",
     "medium": "Music",
-    "statement": "A fictional study in belonging, distance, and the things that connect us.",
-    "parents": [
-      45
-    ],
+    "statement": "Soft keys and a brushed rhythm turn the kitchen in “Two Slices” into a little instrumental. The tune leaves a gap, like the empty chair.",
     "pos": [
-      -10.243011000304167,
-      -3.4235545340548996,
-      0.4872409179399271
-    ]
+      -6,
+      -6,
+      1
+    ],
+    "parents": [
+      1000008,
+      1000009
+    ],
+    "url": "/gallery/kitchen-light.m4a",
+    "mime": "audio/mp4",
+    "galleryCredit": "AI-generated gallery sample"
   },
   {
-    "id": 52,
-    "title": "In the distance",
-    "medium": "Writing",
-    "statement": "A fictional study in belonging, distance, and the things that connect us.",
-    "parents": [
-      46
-    ],
-    "pos": [
-      -8.298549663072105,
-      -6.9118791576188485,
-      -3.0410215185361142
-    ]
-  },
-  {
-    "id": 53,
-    "title": "A small infinity",
-    "medium": "Film",
-    "statement": "A fictional study in belonging, distance, and the things that connect us.",
-    "parents": [
-      47
-    ],
-    "pos": [
-      8.455945869261045,
-      -6.718406020487826,
-      3.9976193952485466
-    ]
-  },
-  {
-    "id": 54,
-    "title": "Where light rests",
-    "medium": "3D art",
-    "statement": "A fictional study in belonging, distance, and the things that connect us.",
-    "parents": [
-      48
-    ],
-    "pos": [
-      10.769067376414073,
-      -4.44406208802871,
-      -2.8546173198280242
-    ]
-  },
-  {
-    "id": 55,
-    "title": "Almost home",
-    "medium": "Mixed media",
-    "statement": "A fictional study in belonging, distance, and the things that connect us.",
-    "parents": [
-      49
-    ],
-    "pos": [
-      1.446448140127601,
-      11.559856736911637,
-      0.21233434858423297
-    ]
-  },
-  {
-    "id": 56,
-    "title": "Tender geometry",
-    "medium": "Visual art",
-    "statement": "A fictional study in belonging, distance, and the things that connect us.",
-    "parents": [
-      50
-    ],
-    "pos": [
-      -1.449333392169028,
-      11.559495348774693,
-      2.5414692913489074
-    ]
-  },
-  {
-    "id": 57,
-    "title": "Between worlds",
+    "id": 1000011,
+    "title": "The Last Bus",
     "medium": "Photography",
-    "statement": "A fictional study in belonging, distance, and the things that connect us.",
-    "parents": [
-      51
-    ],
+    "statement": "After the storm, an ordinary bus stop gets a second light: the one under your feet. The shelter glows in the puddle before a bus turns the corner.",
     "pos": [
-      -10.772369860127842,
-      -4.436050901039033,
-      -3.9604613159477626
-    ]
+      7.6,
+      -0.15,
+      2
+    ],
+    "parents": [
+      1000003
+    ],
+    "url": "/gallery/last-bus.jpg",
+    "mime": "image/jpeg",
+    "alt": "A warm bus shelter and its reflection in a puddle on a blue evening.",
+    "galleryCredit": "AI-generated photograph-style image"
   },
   {
-    "id": 58,
-    "title": "Slowly, slowly",
-    "medium": "Music",
-    "statement": "A fictional study in belonging, distance, and the things that connect us.",
-    "parents": [
-      52
-    ],
-    "pos": [
-      -9.112589272341364,
-      -7.258320518798343,
-      3.2993692786992175
-    ]
-  },
-  {
-    "id": 59,
-    "title": "The other side",
+    "id": 1000012,
+    "title": "My Phone Says Two Minutes",
     "medium": "Writing",
-    "statement": "A fictional study in belonging, distance, and the things that connect us.",
-    "parents": [
-      53
-    ],
+    "statement": "The person missing from “The Last Bus” gets a voice. The second plate in “Leave the Plate Out” gives them somewhere to go.",
     "pos": [
-      8.939153215904751,
-      -7.470879451749956,
-      -0.9054070267775732
-    ]
+      9,
+      -3.5,
+      -1
+    ],
+    "parents": [
+      1000009,
+      1000011
+    ],
+    "text": "Two minutes, says the app.\nIt has said that for ten.\n\nThe shelter drips on my left shoe.\nA car puts red in the puddle\nand takes it away.\n\nAcross town there’s toast\nunder a plate.\nI can almost hear the plate\nslide over the table.",
+    "galleryCredit": "AI-generated gallery sample"
   },
   {
-    "id": 60,
-    "title": "Somewhere Else",
-    "medium": "Film",
-    "statement": "A fictional study in belonging, distance, and the things that connect us.",
-    "parents": [
-      54
-    ],
+    "id": 1000013,
+    "title": "Two More Minutes",
+    "medium": "Music",
+    "statement": "A pulse in pairs borrows the drip in the poem and the staggered lights in the image. A low note comes in near the end like a bus pulling up.",
     "pos": [
-      11.863628561677713,
-      -3.937552202897737,
-      -1.9640863755938773
-    ]
+      6,
+      -6.4,
+      1
+    ],
+    "parents": [
+      1000011,
+      1000012
+    ],
+    "url": "/gallery/two-more-minutes.m4a",
+    "mime": "audio/mp4",
+    "galleryCredit": "AI-generated gallery sample"
   },
   {
-    "id": 61,
-    "title": "The quiet between",
+    "id": 1000014,
+    "title": "A Keyboard You Can’t Type On",
     "medium": "3D art",
-    "statement": "A fictional study in belonging, distance, and the things that connect us.",
+    "statement": "A keyboard comes apart and goes back together as a knot of shells, cables and light. It pushes the nightstand’s trick further: there’s no right way to use it anymore.",
     "parents": [
-      55
+      1000004
     ],
     "pos": [
-      2.9728200982394153,
-      12.141348387370481,
-      3.802016927063803
-    ]
+      -6.5,
+      4.1,
+      -1
+    ],
+    "url": "https://butterfly-human-creativity.vercel.app/gallery/keyboard.webp",
+    "mime": "image/webp",
+    "alt": "Two views of a dismantled keyboard reassembled into an illuminated sculpture.",
+    "galleryCredit": "Original sculpture from the artist’s AP 3-D Art and Design portfolio"
   },
   {
-    "id": 62,
-    "title": "A place to return",
-    "medium": "Mixed media",
-    "statement": "A fictional study in belonging, distance, and the things that connect us.",
+    "id": 1000015,
+    "title": "The Tower Cut Open",
+    "medium": "3D art",
+    "statement": "The gear piece puts its insides on display. This extending tower takes that idea literally: it was cut open and rebuilt to show its cables and mechanism.",
     "parents": [
-      56
+      1000006
     ],
     "pos": [
-      -3.4879393312216567,
-      12.00351112057289,
-      -3.6430804012026776
-    ]
+      7.5,
+      6.9,
+      -2
+    ],
+    "url": "https://butterfly-human-creativity.vercel.app/gallery/tower.webp",
+    "mime": "image/webp",
+    "alt": "A blue extending mechanism with exposed cable, set next to a rough block with dried foliage.",
+    "galleryCredit": "Original sculpture from the artist’s AP 3-D Art and Design portfolio"
   },
   {
-    "id": 63,
-    "title": "Soft boundaries",
-    "medium": "Visual art",
-    "statement": "A fictional study in belonging, distance, and the things that connect us.",
+    "id": 1000016,
+    "title": "A Launcher That Lost Its Job",
+    "medium": "3D art",
+    "statement": "What if you start with a working mechanism and deliberately take away what makes it useful? Wood, wheels, and steel cable are still there, but the launcher no longer does its old job.",
     "parents": [
-      57
+      1000006
     ],
     "pos": [
-      -12.26713041257359,
-      -2.4015643736764822,
-      1.5707522590528573
-    ]
+      7.7,
+      3.2,
+      2
+    ],
+    "url": "https://butterfly-human-creativity.vercel.app/gallery/launcher.webp",
+    "mime": "image/webp",
+    "alt": "Three views of a small blue and wood mechanical sculpture with cable and wheels.",
+    "galleryCredit": "Original sculpture from the artist’s AP 3-D Art and Design portfolio"
+  },
+  {
+    "id": 1000017,
+    "title": "Last Stop, Ten Seconds",
+    "medium": "Film",
+    "statement": "A ten-second moving study made from “The Last Bus” and “Two More Minutes.” The camera moves toward the puddle while the rhythm makes the empty stop feel like it’s waiting.",
+    "parents": [
+      1000011,
+      1000013
+    ],
+    "pos": [
+      10,
+      -6.4,
+      1
+    ],
+    "url": "/gallery/last-stop.mp4",
+    "mime": "video/mp4",
+    "galleryCredit": "AI-generated image and music, edited into a short film"
   }
 ]

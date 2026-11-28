@@ -57,7 +57,15 @@ try {
   const update = (path, session, body, status) => json(path, {method:'PUT', session, body, status});
   const create = (session, body, status) => json('/nodes', {method:'POST', session, body, status});
   const byId = async id => (await json('/nodes')).find(node => node.id === id);
-  const artwork = {title:'A paper trail', medium:'Writing', text:'One fold, then another.', parents:[0, 1]};
+  await pool.query("INSERT INTO nodes(id,data) VALUES (0,'{}'), (1,'{}'), (2,'{}')");
+  assert.equal(await byId(0), undefined);
+  const legacy = await pool.query('INSERT INTO nodes(author_id,data) VALUES($1,$2) RETURNING id',
+    [fixture.rows[0].id, {title:'Existing artwork'}]);
+  await pool.query('INSERT INTO ripples VALUES (0,1), (1,$1)', [legacy.rows[0].id]);
+  assert.deepEqual((await byId(1)).parents, [0]);
+  assert.equal((await byId(Number(legacy.rows[0].id))).title, 'Existing artwork');
+
+  const artwork = {title:'A paper trail', medium:'Writing', text:'One fold, then another.', parents:[1000001, 1000002]};
   const artist = {displayName:' Paper Fox ', bio:' I make tiny paper worlds. ', links:{instagram:'instagram.com/paperfox?igsh=tracking', youtube:''}};
   await request('/profile', {status:401});
   await request('/private', {status:401});
@@ -87,7 +95,7 @@ try {
   await create(a, {...image, url:'data:image/png;base64,dGVzdA=='}, 400);
   const second = await create(a, {...image, url:'data:image/png;base64,' + png}, 201);
   const uploaded = await byId(second.id);
-  assert.deepEqual(uploaded.parents, [0, 1]);
+  assert.deepEqual(uploaded.parents, [1000001, 1000002]);
   assert.deepEqual(uploaded.artist, normalized);
   assert.deepEqual(Object.keys(uploaded.artist).sort(), ['bio','displayName','links']);
   assert.equal(uploaded.author_id, undefined);

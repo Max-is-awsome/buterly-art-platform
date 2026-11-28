@@ -4,6 +4,8 @@ Butterfly is a 3D creative network where people make artwork in response to a st
 
 [Try Butterfly](https://butterfly-human-creativity.vercel.app)
 
+Six original AP portfolio sculptures predate the hackathon and are displayed with the artist’s permission as photographs. Their images are served by the live gallery and are not included in the source distribution. Additional gallery examples use AI-generated images, writing and music, including a short film composed from two of those samples.
+
 ## Run locally
 
 1. Install Node.js 22 or later and start a PostgreSQL database.
@@ -11,7 +13,7 @@ Butterfly is a 3D creative network where people make artwork in response to a st
 3. In `server/`, run `npm ci` and `node --env-file=.env index.mjs`.
 4. From the repository root, run `npm ci` and `npm run dev`. Open the URL printed by Vite.
 
-Without OAuth credentials, the 64 illustrative seed nodes are still available to explore. For your own Vercel deployment, replace the example API origin in `vercel.json` and set the backend's public origin to your frontend URL.
+Without OAuth credentials, the three starting questions and fourteen gallery works are still available to explore. For your own Vercel deployment, replace the example API origin in `vercel.json` and set the backend's public origin to your frontend URL.
 
 Run `npm run build` for a production frontend build and `npm test --prefix server` for backend validation tests.
 

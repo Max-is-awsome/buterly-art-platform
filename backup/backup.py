@@ -24,7 +24,8 @@ with tempfile.TemporaryDirectory() as tmp:
     try:
         subprocess.run(['pg_restore','--exit-on-error','--no-owner','--no-acl','--dbname','postgres',recovered],env=env,check=True)
         count=subprocess.check_output(['psql','-Atc','SELECT count(*) FROM nodes'],env=env,text=True).strip()
-        if int(count)<64: raise RuntimeError('Restored database is missing expected seed data')
+        gallery_count=subprocess.check_output(['psql','-Atc','SELECT count(*) FROM nodes WHERE id BETWEEN 1000001 AND 1000017'],env=env,text=True).strip()
+        if int(gallery_count)!=17 and (int(gallery_count)>0 or int(count)<64): raise RuntimeError('Restored database is missing expected seed data')
         print(json.dumps({'event':'backup_verified','object':key,'sha256':digest,'restored_nodes':int(count)}),flush=True)
     finally:
         subprocess.run(['su-exec','postgres','pg_ctl','-D',data,'-m','fast','-w','stop'],stdout=subprocess.DEVNULL,check=True)
